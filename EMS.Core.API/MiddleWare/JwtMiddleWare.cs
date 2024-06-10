@@ -60,7 +60,11 @@ namespace EMS.Core.API.MiddleWare
                         .Select(item => (FeatureCode)Enum.Parse(typeof(FeatureCode), item))
                         .ToList();
                     context.Items[CommonConstants.ContextItem.PERMISSIONS] = grantedPermissions;
-
+                }
+                var tenantId = jwtToken.Claims.Where(claim => claim.Type == ClaimTypes.System).FirstOrDefault();
+                if (tenantId != null)
+                {
+                    context.Items[CommonConstants.ContextItem.TENANT_ID] = tenantId;
                 }
             }
             catch (SecurityTokenExpiredException ex)

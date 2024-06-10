@@ -31,7 +31,7 @@ namespace EMS.Core.Business
             {
                 throw new ItemNotFoundException();
             }
-            return GenerateToken(username, new List<FeatureCode> { FeatureCode.Common, FeatureCode.SuperAdmin });
+            return GenerateToken(username, user.TenantId, new List<FeatureCode> { FeatureCode.Common, FeatureCode.SuperAdmin });
         }
 
         public bool CheckRefreshTokenIsValid(Guid refreshToken)
@@ -60,11 +60,15 @@ namespace EMS.Core.Business
             }
         }
 
-        private string GenerateToken(string email, List<FeatureCode> roles)
+        private string GenerateToken(string email, long tenantId, List<FeatureCode> roles)
         {
             try
             {
-                List<Claim> claims = new List<Claim>() { new Claim(ClaimTypes.Email, email), new Claim(ClaimTypes.Role, string.Join(",", roles)) };
+                List<Claim> claims = new List<Claim>() {
+                    new Claim(ClaimTypes.Email, email),
+                    new Claim(ClaimTypes.Role, string.Join(",", roles)) ,
+                    new Claim(ClaimTypes.System, tenantId.ToString())
+                };
 
                 SymmetricSecurityKey secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Jwt.SecretKey));
 
@@ -86,7 +90,7 @@ namespace EMS.Core.Business
 
         public string GenerateToken()
         {
-            return GenerateToken("asd", new List<FeatureCode> { FeatureCode.Common, FeatureCode.SuperAdmin });
+            return GenerateToken("asd", 1, new List<FeatureCode> { FeatureCode.Common, FeatureCode.SuperAdmin });
         }
     }
 }

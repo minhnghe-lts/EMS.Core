@@ -27,6 +27,7 @@
         {
             public const string USER = "User";
             public const string PERMISSIONS = "Permissions";
+            public const string TENANT_ID = "TenantId";
         }
     }
 }
