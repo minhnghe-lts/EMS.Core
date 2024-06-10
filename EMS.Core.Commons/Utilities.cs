@@ -62,6 +62,16 @@ namespace EMS.Core.Commons
             return record;
         }
 
+        public static IQueryable<T> GetAvailableByTenantIdQueryable<T>(this DbSet<T> entity, long tenantId) where T : BaseEntityWithTenantSoftDeletable
+        {
+            var record = entity.Where(c => c.TenantId == tenantId && !c.IsDeleted);
+            if (!record.Any())
+            {
+                throw new ItemNotFoundException();
+            }
+            return record;
+        }
+
         public static void Delete<T>(this DbSet<T> entity, long id, bool isPermanent = false) where T : BaseEntitySoftDeletable
         {
             var record = entity.GetAvailableById(id);
