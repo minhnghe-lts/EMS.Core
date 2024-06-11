@@ -65,10 +65,10 @@ namespace EMS.Core.Commons
         public static IQueryable<T> GetAvailableByTenantIdQueryable<T>(this DbSet<T> entity, long tenantId) where T : BaseEntityWithTenantSoftDeletable
         {
             var record = entity.Where(c => c.TenantId == tenantId && !c.IsDeleted);
-            if (!record.Any())
-            {
-                throw new ItemNotFoundException();
-            }
+            //if (!record.Any())
+            //{
+            //    throw new ItemNotFoundException();
+            //}
             return record;
         }
 
