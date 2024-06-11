@@ -23,7 +23,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer();
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(nameof(AppSettings)));
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.ServiceRegister();
 
 builder.Services.AddTransient<ExceptionHandlerMiddleWare>();
