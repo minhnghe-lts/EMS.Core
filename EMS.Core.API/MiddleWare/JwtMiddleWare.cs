@@ -64,7 +64,7 @@ namespace EMS.Core.API.MiddleWare
                 var tenantId = jwtToken.Claims.Where(claim => claim.Type == ClaimTypes.System).FirstOrDefault();
                 if (tenantId != null)
                 {
-                    context.Items[CommonConstants.ContextItem.TENANT_ID] = tenantId;
+                    context.Items[CommonConstants.ContextItem.TENANT_ID] = tenantId.Value;
                 }
             }
             catch (SecurityTokenExpiredException ex)
