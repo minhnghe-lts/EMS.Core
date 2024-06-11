@@ -4,7 +4,7 @@
     {
         public static void DevelopmentSeeding(AppDbContext context)
         {
-
+            InitData(context);
         }
     }
 }
