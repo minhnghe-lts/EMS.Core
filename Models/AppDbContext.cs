@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EMS.Core.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace EMS.Core.Models
 {
@@ -13,6 +14,8 @@ namespace EMS.Core.Models
         public DbSet<Benefit> Benefits { get; set; }
         public DbSet<Contract> Contracts { get; set; }
         public DbSet<ContractType> ContractTypes { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<CourseSubject> CourseSubjects { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<DepartmentLevel> DepartmentLevels { get; set; }
         public DbSet<DepartmentManager> DepartmentManagers { get; set; }
@@ -31,7 +34,16 @@ namespace EMS.Core.Models
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<StudentAllocation> StudentAllocation { get; set; }
+        public DbSet<Subject> Subjects { get; set; }
         public DbSet<Tenant> Tenants { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.NoAction;
+            }
+        }
     }
 }
