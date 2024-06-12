@@ -10,7 +10,7 @@ namespace EMS.Core.Models.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("select * from where");
+            //migrationBuilder.Sql("select * from where");
             migrationBuilder.CreateTable(
                 name: "Benefits",
                 columns: table => new
