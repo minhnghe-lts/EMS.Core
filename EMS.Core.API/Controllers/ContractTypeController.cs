@@ -2,7 +2,9 @@
 using EMS.Core.Business.Interfaces;
 using EMS.Core.Commons;
 using EMS.Core.Models.RequestModels;
+using EMS.Core.Models.RequestModels.ContractType;
 using EMS.Core.Models.ResponseModels;
+using EMS.Core.Models.ResponseModels.ContractType;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMS.Core.API.Controllers
@@ -23,6 +25,21 @@ namespace EMS.Core.API.Controllers
         {
             var result = await _contractTypeService.GetPageContractTypeAsync(TenantId, input);
             return Ok(result);
+        }
+        [HttpPost]
+        public async Task<ActionResult> CreateContractTypeAsync([FromQuery] CreateEditContractTypeReqModel input)
+        {
+            return Ok(await _contractTypeService.CreateContractTypeAsync(TenantId, input));
+        }
+        [HttpPut]
+        public async Task<ActionResult> EditContractTypeAsync([FromQuery] CreateEditContractTypeReqModel input)
+        {
+            return Ok(await _contractTypeService.EditContractTypeAsync(input));
+        }
+        [HttpDelete]
+        public async Task<ActionResult> DeleteContractTypeAsync([FromQuery]DeleteContractTypeReqModel input)
+        {
+            return Ok(await _contractTypeService.DeleteContractTypeAsync(input));
         }
     }
 }

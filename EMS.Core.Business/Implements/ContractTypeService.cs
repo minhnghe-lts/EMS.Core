@@ -2,7 +2,9 @@
 using EMS.Core.Commons;
 using EMS.Core.Models;
 using EMS.Core.Models.RequestModels;
+using EMS.Core.Models.RequestModels.ContractType;
 using EMS.Core.Models.ResponseModels;
+using EMS.Core.Models.ResponseModels.ContractType;
 
 namespace EMS.Core.Business.Implements
 {
@@ -13,6 +15,80 @@ namespace EMS.Core.Business.Implements
         public ContractTypeService(AppDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<CreateEditContractTypeResModel> CreateContractTypeAsync(long tenatId, CreateEditContractTypeReqModel input)
+        {
+            try
+            {
+                var contractType = new ContractType
+                {
+                    IsDeleted = false,
+                    Name = input.Name,
+                    TenantId = tenatId,
+                };
+                _context.ContractTypes.Add(contractType);
+                await _context.SaveChangesAsync();
+                var result = new CreateEditContractTypeResModel
+                {
+                    ContractTypeName = contractType.Name,
+                };
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<DeleteContractTypeResModel> DeleteContractTypeAsync(DeleteContractTypeReqModel input)
+        {
+            try
+            {
+                var contracType = _context.ContractTypes.FirstOrDefault(record => record.Id == input.Id);
+                if (contracType == null)
+                {
+                    throw new ItemNotFoundException();
+                }
+                contracType.IsDeleted = true;
+                await _context.SaveChangesAsync();
+                var result = new DeleteContractTypeResModel
+                {
+                    Id = contracType.Id,
+                    Name = contracType.Name,
+                    IsDeleted = contracType.IsDeleted,
+                };
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<CreateEditContractTypeResModel> EditContractTypeAsync(CreateEditContractTypeReqModel input)
+        {
+            try
+            {
+                var contractType = _context.ContractTypes.FirstOrDefault(record => record.Id == input.Id && !record.IsDeleted);
+                if (contractType == null)
+                {
+                    throw new ItemNotFoundException();
+                }
+                contractType.Name = input.Name;
+                _context.ContractTypes.Update(contractType);
+                await _context.SaveChangesAsync();
+                var result = new CreateEditContractTypeResModel
+                {
+                    Id = contractType.Id,
+                    ContractTypeName = contractType.Name,
+                };
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<GetPageContractTypeResModel> GetPageContractTypeAsync(long tenantId, BasePaginationReqModel input)
