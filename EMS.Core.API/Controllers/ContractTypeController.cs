@@ -2,7 +2,6 @@
 using EMS.Core.Business.Interfaces;
 using EMS.Core.Commons;
 using EMS.Core.Models.RequestModels;
-using EMS.Core.Models.RequestModels.ContractType;
 using EMS.Core.Models.ResponseModels;
 using EMS.Core.Models.ResponseModels.ContractType;
 using Microsoft.AspNetCore.Mvc;
@@ -41,5 +40,11 @@ namespace EMS.Core.API.Controllers
         {
             return Ok(await _contractTypeService.DeleteContractTypeAsync(input));
         }
+        [HttpGet]
+        public async Task<ActionResult> GetContracTypeByIdAsync(long contractTypeId)
+        {
+            return Ok(await _contractTypeService.GetContracTypeByIdAsync(contractTypeId));
+        }
+
     }
 }

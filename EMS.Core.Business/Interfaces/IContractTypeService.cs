@@ -1,5 +1,4 @@
 ﻿using EMS.Core.Models.RequestModels;
-using EMS.Core.Models.RequestModels.ContractType;
 using EMS.Core.Models.ResponseModels;
 using EMS.Core.Models.ResponseModels.ContractType;
 
@@ -11,5 +10,6 @@ namespace EMS.Core.Business.Interfaces
         Task<CreateEditContractTypeResModel> CreateContractTypeAsync(long tenatId, CreateEditContractTypeReqModel input);
         Task<CreateEditContractTypeResModel> EditContractTypeAsync(CreateEditContractTypeReqModel input);
         Task<DeleteContractTypeResModel> DeleteContractTypeAsync(DeleteContractTypeReqModel input);
+        Task<GetContractTypeResModel> GetContracTypeByIdAsync(long contractTypeId);
     }
 }

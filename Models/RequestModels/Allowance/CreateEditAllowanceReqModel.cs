@@ -4,13 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EMS.Core.Models.ResponseModels
+namespace EMS.Core.Models.RequestModels
 {
-    public class GetPageAllowanceResModel : BasePaginationResModel
-    {
-        public List<AllowanceResModel> Data { get; set; }
-    }
-    public class AllowanceResModel
+    public class CreateEditAllowanceReqModel
     {
         public long Id { get; set; }
         public string Name { get; set; }

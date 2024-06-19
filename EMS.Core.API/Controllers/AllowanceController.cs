@@ -1,7 +1,8 @@
 ﻿using EMS.Core.API.Extensions;
 using EMS.Core.Business.Interfaces;
 using EMS.Core.Commons;
-using EMS.Core.Models.RequestModels.ContractAllowance;
+using EMS.Core.Models.RequestModels;
+using EMS.Core.Models.ResponseModels;
 using EMS.Core.Models.ResponseModels.ContractAllowance;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +40,11 @@ namespace EMS.Core.API.Controllers
         public async Task<ActionResult<GetPageAllowanceResModel>> GetPageAllowanceAsync([FromQuery]GetPageAllowanceReqModel input)
         {
             return Ok(await _contracAllowanceService.GetPageAllowanceAsync(TenantId,input));
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetPageAllowanceByIdAsync(long allowanceId)
+        {
+            return Ok(await _contracAllowanceService.GetAllowanceByIdAsync(allowanceId));
         }
 
 

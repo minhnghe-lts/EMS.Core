@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EMS.Core.Models.RequestModels
+namespace EMS.Core.Models.ResponseModels.ContractType
 {
-    public class DeleteContractTypeReqModel
+    public class GetContractTypeResModel
     {
         public long Id {  get; set; }
+        public string Name { get; set; }
     }
 }

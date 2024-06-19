@@ -2,7 +2,6 @@
 using EMS.Core.Commons;
 using EMS.Core.Models;
 using EMS.Core.Models.RequestModels;
-using EMS.Core.Models.RequestModels.ContractType;
 using EMS.Core.Models.ResponseModels;
 using EMS.Core.Models.ResponseModels.ContractType;
 
@@ -84,6 +83,27 @@ namespace EMS.Core.Business.Implements
                     ContractTypeName = contractType.Name,
                 };
                 return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<GetContractTypeResModel> GetContracTypeByIdAsync(long contractTypeId)
+        {
+            try
+            {
+                var contractType = _context.ContractTypes.FirstOrDefault(record => record.Id == contractTypeId);
+                if(contractType == null)
+                {
+                    throw new ItemNotFoundException();
+                }
+                return new GetContractTypeResModel
+                {
+                    Id = contractType.Id,
+                    Name = contractType.Name,
+                };
             }
             catch (Exception)
             {

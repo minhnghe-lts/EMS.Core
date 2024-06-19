@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EMS.Core.Models.RequestModels.ContractAllowance
+namespace EMS.Core.Models.RequestModels
 {
     public class GetPageAllowanceReqModel : BasePaginationReqModel
     {

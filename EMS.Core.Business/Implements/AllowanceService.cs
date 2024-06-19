@@ -2,7 +2,8 @@
 using EMS.Core.Commons;
 using EMS.Core.Models;
 using EMS.Core.Models.Entities;
-using EMS.Core.Models.RequestModels.ContractAllowance;
+using EMS.Core.Models.RequestModels;
+using EMS.Core.Models.ResponseModels;
 using EMS.Core.Models.ResponseModels.ContractAllowance;
 using System;
 using System.Collections.Generic;
@@ -136,6 +137,31 @@ namespace EMS.Core.Business.Implements
             catch (Exception) 
             { 
                 throw; 
+            }
+        }
+
+        public async Task<GetAllowanceResModel> GetAllowanceByIdAsync(long allowanceId)
+        {
+            try
+            {
+                var allowance = _context.Allowances.FirstOrDefault(record => record.Id == allowanceId);
+                if(allowance == null)
+                {
+                    throw new ItemNotFoundException();
+                }
+                return new GetAllowanceResModel
+                {
+                    Id = allowance.Id,
+                    Name = allowance.Name,
+                    Amount = allowance.Amount,
+                    Decription = allowance.Description,
+                    FromDate = allowance.FromDate,
+                    ToDate = allowance.ToDate,
+                };
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
     }
