@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EMS.Core.API.Controllers
 {
-    [ApiController]
     [Authorize]
+    [ApiController]
     [Route(CommonConstants.DefaultValue.DEFAULT_CONTROLLER_ROUTE)]
     public class ContractTypeController : BaseController
     {
