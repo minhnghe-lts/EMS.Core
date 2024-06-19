@@ -11,8 +11,10 @@ namespace EMS.Core.Models
         public DbSet<Account> Accounts { get; set; }
         public DbSet<AccountPermission> AccountPermissions { get; set; }
         public DbSet<AccountRole> AccountRoles { get; set; }
+        public DbSet<Allowance> Allowances { get; set; }
         public DbSet<Benefit> Benefits { get; set; }
         public DbSet<Contract> Contracts { get; set; }
+        public DbSet<ContractAllowance> ContractAllowances { get; set; }
         public DbSet<ContractType> ContractTypes { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseSubject> CourseSubjects { get; set; }
