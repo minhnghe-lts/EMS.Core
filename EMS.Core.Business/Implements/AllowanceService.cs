@@ -81,7 +81,7 @@ namespace EMS.Core.Business.Implements
         {
             try
             {
-                var allowance = _context.Allowances.FirstOrDefault(record => record.Id == input.Id);
+                var allowance = _context.Allowances.FirstOrDefault(record => record.Id == input.Id && !record.IsDeleted);
                 if(allowance == null)
                 {
                     throw new ItemNotFoundException();
@@ -144,7 +144,7 @@ namespace EMS.Core.Business.Implements
         {
             try
             {
-                var allowance = _context.Allowances.FirstOrDefault(record => record.Id == allowanceId);
+                var allowance = _context.Allowances.FirstOrDefault(record => record.Id == allowanceId && !record.IsDeleted);
                 if(allowance == null)
                 {
                     throw new ItemNotFoundException();

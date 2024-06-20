@@ -94,7 +94,7 @@ namespace EMS.Core.Business.Implements
         {
             try
             {
-                var contractType = _context.ContractTypes.FirstOrDefault(record => record.Id == contractTypeId);
+                var contractType = _context.ContractTypes.FirstOrDefault(record => record.Id == contractTypeId && !record.IsDeleted);
                 if(contractType == null)
                 {
                     throw new ItemNotFoundException();
