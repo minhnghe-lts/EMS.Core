@@ -99,7 +99,7 @@ namespace EMS.Core.Business.Implements
                     TotalItems = totalItems,
                     PageNo = input.PageNo,
                     PageSize = input.PageSize,
-                    TotalPages = (int)Math.Floor((decimal)totalItems / input.PageSize)
+                    TotalPages = (int)Math.Ceiling((decimal)totalItems / input.PageSize)
                 };
                 return result;
             }
