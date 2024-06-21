@@ -3,7 +3,6 @@ using EMS.Core.Business.Interfaces;
 using EMS.Core.Commons;
 using EMS.Core.Models.RequestModels;
 using EMS.Core.Models.ResponseModels;
-using EMS.Core.Models.ResponseModels.ContractAllowance;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,26 +21,30 @@ namespace EMS.Core.API.Controllers
             _contracAllowanceService = contracAllowanceService;
         }      
         [HttpPost]
-        public async Task<IActionResult> CreateAllowanceAsync([FromQuery] CreateEditAllowanceReqModel input)
+        public async Task<IActionResult> CreateAllowanceAsync([FromBody] CreateEditAllowanceReqModel input)
         {
-            return Ok(await _contracAllowanceService.CreateAllowanceAsync(TenantId, input));
+            await _contracAllowanceService.CreateAllowanceAsync(TenantId, input);
+            return Ok();
         }
-        [HttpPut]
-        public async Task<ActionResult> EditAllowanceAsync([FromQuery]CreateEditAllowanceReqModel input)
+        [HttpPut("{id}")]
+        public async Task<ActionResult> EditAllowanceAsync(long id,[FromBody]CreateEditAllowanceReqModel input)
         {
-            return Ok(await _contracAllowanceService.EditAllowanceAsync(input));
+            await _contracAllowanceService.EditAllowanceAsync(id, input);
+            return Ok();
         }
-        [HttpDelete]
-        public async Task<ActionResult> DeleteAllowanceAsync([FromQuery] DeleteAllowanceReqModel input)
+        [HttpDelete("{allowanceId}")]
+        public async Task<ActionResult> DeleteAllowanceAsync(long allowanceId)
         {
-            return Ok(await _contracAllowanceService.DeleteAllowanceAsync(input));
-        }
-        [HttpGet]
-        public async Task<ActionResult<GetPageAllowanceResModel>> GetPageAllowanceAsync([FromQuery]GetPageAllowanceReqModel input)
-        {
-            return Ok(await _contracAllowanceService.GetPageAllowanceAsync(TenantId,input));
+            await _contracAllowanceService.DeleteAllowanceAsync(allowanceId);
+            return Ok();
         }
         [HttpGet]
+        public async Task<ActionResult<BasePaginationResModel<AllowanceResModel>>> GetPageAllowanceAsync([FromQuery]GetPageAllowanceReqModel input)
+        {
+            var result = await _contracAllowanceService.GetPageAllowanceAsync(TenantId, input);
+            return Ok(result);
+        }
+        [HttpGet("{allowanceId}")]
         public async Task<ActionResult> GetPageAllowanceByIdAsync(long allowanceId)
         {
             return Ok(await _contracAllowanceService.GetAllowanceByIdAsync(allowanceId));

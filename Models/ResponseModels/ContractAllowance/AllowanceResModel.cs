@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EMS.Core.Models.ResponseModels.ContractAllowance
+namespace EMS.Core.Models.ResponseModels
 {
-    public class GetAllowanceResModel
+    public class AllowanceResModel
     {
         public long Id { get; set; }
         public string Name { get; set; }

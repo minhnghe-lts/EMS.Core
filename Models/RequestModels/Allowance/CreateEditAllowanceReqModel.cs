@@ -8,7 +8,6 @@ namespace EMS.Core.Models.RequestModels
 {
     public class CreateEditAllowanceReqModel
     {
-        public long Id { get; set; }
         public string Name { get; set; }
         public string Decription { get; set; }
         public decimal Amount { get; set; }

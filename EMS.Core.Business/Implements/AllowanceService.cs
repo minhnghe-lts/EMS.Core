@@ -4,7 +4,6 @@ using EMS.Core.Models;
 using EMS.Core.Models.Entities;
 using EMS.Core.Models.RequestModels;
 using EMS.Core.Models.ResponseModels;
-using EMS.Core.Models.ResponseModels.ContractAllowance;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +21,7 @@ namespace EMS.Core.Business.Implements
             _context = context;
         }
 
-        public async Task<CreateEditAllowanceResModel> CreateAllowanceAsync(long tenantId, CreateEditAllowanceReqModel input)
+        public async Task CreateAllowanceAsync(long tenantId, CreateEditAllowanceReqModel input)
         {
             try
             {
@@ -38,14 +37,6 @@ namespace EMS.Core.Business.Implements
                 };
                 _context.Allowances.Add(allowance);
                 await _context.SaveChangesAsync();
-                return new CreateEditAllowanceResModel
-                {
-                    Name = allowance.Name,
-                    Amount = allowance.Amount,
-                    Decription = allowance.Description,
-                    FromDate = allowance.FromDate,
-                    ToDate = allowance.ToDate,
-                };
             }
             catch (Exception)
             {
@@ -53,23 +44,14 @@ namespace EMS.Core.Business.Implements
             }
         }
 
-        public async Task<DeleteAllowanceResModel> DeleteAllowanceAsync(DeleteAllowanceReqModel input)
+        public async Task DeleteAllowanceAsync(long allowanceId)
         {
             try
             {
-                var allowance = _context.Allowances.FirstOrDefault(record => record.Id == input.Id);
-                if(allowance == null)
-                {
-                    throw new ItemNotFoundException();
-                }
+                var allowance = _context.Allowances.GetAvailableById(allowanceId);
                 allowance.IsDeleted = true;
                 _context.Allowances.Update(allowance);
                 await _context.SaveChangesAsync();
-                return new DeleteAllowanceResModel
-                {
-                    Id = allowance.Id,
-                    IsDeleted = allowance.IsDeleted,
-                };
             }
             catch (Exception)
             {
@@ -77,15 +59,11 @@ namespace EMS.Core.Business.Implements
             }
         }
 
-        public async Task<CreateEditAllowanceResModel> EditAllowanceAsync(CreateEditAllowanceReqModel input)
+        public async Task EditAllowanceAsync(long id, CreateEditAllowanceReqModel input)
         {
             try
             {
-                var allowance = _context.Allowances.FirstOrDefault(record => record.Id == input.Id && !record.IsDeleted);
-                if(allowance == null)
-                {
-                    throw new ItemNotFoundException();
-                }
+                var allowance = _context.Allowances.GetAvailableById(id);
                 allowance.Amount = input.Amount;
                 allowance.Description = input.Decription;
                 allowance.FromDate = input.FromDate;
@@ -93,15 +71,6 @@ namespace EMS.Core.Business.Implements
                 allowance.Name = input.Name;
                 _context.Allowances.Update(allowance);
                 await _context.SaveChangesAsync();
-                return new CreateEditAllowanceResModel
-                {
-                    Id = allowance.Id,
-                    Name = allowance.Name,
-                    Amount = allowance.Amount,
-                    Decription = allowance.Description,
-                    FromDate = allowance.FromDate,
-                    ToDate = allowance.ToDate,
-                };
             }
             catch (Exception) 
             { 
@@ -109,7 +78,7 @@ namespace EMS.Core.Business.Implements
             }
         }
 
-        public async Task<GetPageAllowanceResModel> GetPageAllowanceAsync(long tenantId, GetPageAllowanceReqModel input)
+        public async Task<BasePaginationResModel<AllowanceResModel>> GetPageAllowanceAsync(long tenantId, GetPageAllowanceReqModel input)
         {
             try
             {
@@ -124,7 +93,7 @@ namespace EMS.Core.Business.Implements
                     FromDate = record.FromDate,
                     ToDate = record.ToDate,
                 }).ToList();
-                var result = new GetPageAllowanceResModel
+                var result = new BasePaginationResModel<AllowanceResModel>
                 {
                     Data = data,
                     TotalItems = totalItems,
@@ -140,16 +109,12 @@ namespace EMS.Core.Business.Implements
             }
         }
 
-        public async Task<GetAllowanceResModel> GetAllowanceByIdAsync(long allowanceId)
+        public async Task<AllowanceResModel> GetAllowanceByIdAsync(long allowanceId)
         {
             try
             {
-                var allowance = _context.Allowances.FirstOrDefault(record => record.Id == allowanceId && !record.IsDeleted);
-                if(allowance == null)
-                {
-                    throw new ItemNotFoundException();
-                }
-                return new GetAllowanceResModel
+                var allowance = _context.Allowances.GetAvailableById(allowanceId);
+                var result = new AllowanceResModel
                 {
                     Id = allowance.Id,
                     Name = allowance.Name,
@@ -158,6 +123,7 @@ namespace EMS.Core.Business.Implements
                     FromDate = allowance.FromDate,
                     ToDate = allowance.ToDate,
                 };
+                return result;
             }
             catch (Exception)
             {
