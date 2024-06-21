@@ -25,7 +25,7 @@ namespace EMS.Core.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<ActionResult> GetInfoCourse([FromQuery] GetInfoCourseReqModel input)
         {
             return Ok(await _courseService.GetInfoCourseAsync(TenantId, input));

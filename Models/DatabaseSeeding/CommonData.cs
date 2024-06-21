@@ -35,15 +35,15 @@
 
             if (!context.Departments.Any())
             {
-                _department = new Department
-                {
-                    Name = "Head Quarter",
-                    IsActive = true,
-                    TenantId = _adminTenant.Id,
-                    DepartmentLevelId = context.DepartmentLevels.FirstOrDefault().Id
-                };
-                context.Departments.Add(_department);
-                context.SaveChanges();
+                //_department = new Department
+                //{
+                //    Name = "Head Quarter",
+                //    IsActive = true,
+                //    TenantId = _adminTenant.Id,
+                //    DepartmentLevelId = context.DepartmentLevels.FirstOrDefault().Id
+                //};
+                //context.Departments.Add(_department);
+                //context.SaveChanges();
             }
             else
             {

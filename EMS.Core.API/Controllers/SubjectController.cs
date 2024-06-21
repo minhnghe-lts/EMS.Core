@@ -25,7 +25,7 @@ namespace EMS.Core.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
+        [HttpPost("GetInfoSubject")]
         public async Task<ActionResult> GetInfoSubject([FromQuery] GetInfoSubjectReqModel input)
         {
             return Ok(await _subjectService.GetInfoSubjectAsync(TenantId, input));
