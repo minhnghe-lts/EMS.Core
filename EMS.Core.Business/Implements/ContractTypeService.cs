@@ -15,7 +15,73 @@ namespace EMS.Core.Business.Implements
             _context = context;
         }
 
-        public async Task<GetPageContractTypeResModel> GetPageContractTypeAsync(long tenantId, BasePaginationReqModel input)
+        public async Task CreateContractTypeAsync(long tenatId, CreateEditContractTypeReqModel input)
+        {
+            try
+            {
+                var contractType = new ContractType
+                {
+                    IsDeleted = false,
+                    Name = input.Name,
+                    TenantId = tenatId,
+                };
+                _context.ContractTypes.Add(contractType);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task DeleteContractTypeAsync(long contractTypeId)
+        {
+            try
+            {
+                var contracType = _context.ContractTypes.GetAvailableById(contractTypeId);
+                contracType.IsDeleted = true;
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task EditContractTypeAsync(long id, CreateEditContractTypeReqModel input)
+        {
+            try
+            {
+                var contractType = _context.ContractTypes.GetAvailableById(id);
+                contractType.Name = input.Name;
+                _context.ContractTypes.Update(contractType);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<ContractTypeResModel> GetContracTypeByIdAsync(long contractTypeId)
+        {
+            try
+            {
+                var contractType = _context.ContractTypes.GetAvailableById(contractTypeId);
+                var resulst = new ContractTypeResModel
+                {
+                    Id = contractType.Id,
+                    Name = contractType.Name,
+                };
+                return resulst;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<BasePaginationResModel<ContractTypeResModel>> GetPageContractTypeAsync(long tenantId, BasePaginationReqModel input)
         {
             try
             {
@@ -29,13 +95,13 @@ namespace EMS.Core.Business.Implements
                     Name = record.Name,
                 }).ToList();
 
-                var result = new GetPageContractTypeResModel
+                var result = new BasePaginationResModel<ContractTypeResModel>
                 {
                     Data = data,
                     TotalItems = totalItems,
                     PageNo = input.PageNo,
                     PageSize = input.PageSize,
-                    TotalPages = (int)Math.Floor((decimal)totalItems / input.PageSize)
+                    TotalPages = (int)Math.Ceiling((decimal)totalItems / input.PageSize)
                 };
                 return result;
             }

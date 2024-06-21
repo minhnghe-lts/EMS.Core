@@ -11,6 +11,7 @@ namespace EMS.Core.API.Extensions
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IEmployeeService, EmployeeService>();
             services.AddTransient<IContractTypeService, ContractTypeService>();
+            services.AddTransient<IAllowanceService, AllowanceService>();
         }
     }
 }

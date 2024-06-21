@@ -19,10 +19,35 @@ namespace EMS.Core.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<GetPageContractTypeResModel>> GetPageContractType([FromQuery] GetPageContractTypeReqModel input)
+        public async Task<ActionResult> GetPageContractType([FromQuery] GetPageContractTypeReqModel input)
         {
             var result = await _contractTypeService.GetPageContractTypeAsync(TenantId, input);
             return Ok(result);
         }
+        [HttpPost]
+        public async Task<ActionResult> CreateContractTypeAsync([FromBody] CreateEditContractTypeReqModel input)
+        {
+            await _contractTypeService.CreateContractTypeAsync(TenantId, input);
+            return Ok();
+        }
+        [HttpPut("{id}")]
+        public async Task<ActionResult> EditContractTypeAsync(long id, [FromBody] CreateEditContractTypeReqModel input)
+        {
+            await _contractTypeService.EditContractTypeAsync(id, input);
+            return Ok();
+        }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteContractTypeAsync(long id)
+        {
+            await _contractTypeService.DeleteContractTypeAsync(id);
+            return Ok();
+        }
+        [HttpGet("{contractTypeId}")]
+        public async Task<ActionResult> GetContracTypeByIdAsync(long contractTypeId)
+        {
+            var result = await _contractTypeService.GetContracTypeByIdAsync(contractTypeId);
+            return Ok(result);
+        }
+
     }
 }
