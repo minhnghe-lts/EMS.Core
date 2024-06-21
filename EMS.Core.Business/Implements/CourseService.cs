@@ -106,9 +106,10 @@ namespace EMS.Core.Business.Implements
             try
             {
                 var course = _context.Courses.GetAvailableById(id);
-                var courseSubjects = _context.CourseSubjects
-                    .Where(record => record.CourseId == course.Id)
-                    .ToList();
+                    var courseSubjects = _context.CourseSubjects
+                        .Where(record => record.CourseId == course.Id)
+                        .ToList();
+                }
                 course.CodeName = input.CodeName;
                 course.Name = input.Name;
 
@@ -132,9 +133,10 @@ namespace EMS.Core.Business.Implements
             try
             {
                 var course = _context.Courses.GetAvailableById(id);
-                var courseSubjects = _context.CourseSubjects
-                    .Where(record => record.CourseId == course.Id)
-                    .ToList();
+                    var courseSubjects = _context.CourseSubjects
+                        .Where(record => record.CourseId == course.Id)
+                        .ToList();
+                }
                 course.IsDeleted = true;
                 _context.CourseSubjects.RemoveRange(course.CourseSubjects);
                 await _context.SaveChangesAsync();
