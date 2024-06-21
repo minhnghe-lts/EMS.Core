@@ -30,14 +30,23 @@ namespace EMS.Core.Models.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long?>("EmployeeId")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime>("History")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
@@ -169,7 +178,7 @@ namespace EMS.Core.Models.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("BenefitDepartment");
+                    b.ToTable("BenefitDepartments");
                 });
 
             modelBuilder.Entity("EMS.Core.Models.BenefitPosition", b =>
@@ -195,7 +204,7 @@ namespace EMS.Core.Models.Migrations
 
                     b.HasIndex("PositionId");
 
-                    b.ToTable("BenefitPosition");
+                    b.ToTable("BenefitPositions");
                 });
 
             modelBuilder.Entity("EMS.Core.Models.Contract", b =>
@@ -257,29 +266,38 @@ namespace EMS.Core.Models.Migrations
                     b.Property<long>("ContractId")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("FromDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("TenantId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("ToDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("UpdatedBy")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ContractId");
 
-                    b.ToTable("ContractAllowance");
+                    b.ToTable("ContractAllowances");
                 });
 
             modelBuilder.Entity("EMS.Core.Models.ContractBenefit", b =>
@@ -305,7 +323,7 @@ namespace EMS.Core.Models.Migrations
 
                     b.HasIndex("ContractId");
 
-                    b.ToTable("ContractBenefit");
+                    b.ToTable("ContractBenefits");
                 });
 
             modelBuilder.Entity("EMS.Core.Models.ContractRemunerationRegime", b =>
@@ -331,7 +349,7 @@ namespace EMS.Core.Models.Migrations
 
                     b.HasIndex("RemunerationRegimeId");
 
-                    b.ToTable("ContractRemunerationRegime");
+                    b.ToTable("ContractRemunerationRegimes");
                 });
 
             modelBuilder.Entity("EMS.Core.Models.ContractType", b =>
@@ -1001,7 +1019,7 @@ namespace EMS.Core.Models.Migrations
             modelBuilder.Entity("EMS.Core.Models.AccountPermission", b =>
                 {
                     b.HasOne("EMS.Core.Models.Account", "Account")
-                        .WithMany()
+                        .WithMany("AccountPermissions")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -1020,7 +1038,7 @@ namespace EMS.Core.Models.Migrations
             modelBuilder.Entity("EMS.Core.Models.AccountRole", b =>
                 {
                     b.HasOne("EMS.Core.Models.Account", "Account")
-                        .WithMany()
+                        .WithMany("AccountRoles")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -1398,6 +1416,13 @@ namespace EMS.Core.Models.Migrations
                     b.Navigation("EmployeeSchedule");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("EMS.Core.Models.Account", b =>
+                {
+                    b.Navigation("AccountPermissions");
+
+                    b.Navigation("AccountRoles");
                 });
 
             modelBuilder.Entity("EMS.Core.Models.Benefit", b =>

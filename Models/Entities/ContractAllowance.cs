@@ -2,7 +2,7 @@
 
 namespace EMS.Core.Models
 {
-    public class ContractAllowance : BaseEntityMasterType
+    public class ContractAllowance : BaseEntitySoftDeletable
     {
         public long ContractId { get; set; }
         public virtual Contract Contract { get; set; }
@@ -10,5 +10,6 @@ namespace EMS.Core.Models
         public decimal Amount { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
+        public bool IsActive { get; set; }
     }
 }

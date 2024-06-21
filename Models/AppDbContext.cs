@@ -12,7 +12,12 @@ namespace EMS.Core.Models
         public DbSet<AccountPermission> AccountPermissions { get; set; }
         public DbSet<AccountRole> AccountRoles { get; set; }
         public DbSet<Benefit> Benefits { get; set; }
+        public DbSet<BenefitPosition> BenefitPositions { get; set; }
+        public DbSet<BenefitDepartment> BenefitDepartments { get; set; }
         public DbSet<Contract> Contracts { get; set; }
+        public DbSet<ContractRemunerationRegime> ContractRemunerationRegimes { get; set; }
+        public DbSet<ContractBenefit> ContractBenefits { get; set; }
+        public DbSet<ContractAllowance> ContractAllowances { get; set; }
         public DbSet<ContractType> ContractTypes { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseSubject> CourseSubjects { get; set; }
