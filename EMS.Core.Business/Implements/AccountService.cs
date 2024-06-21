@@ -6,16 +6,16 @@ using EMS.Core.Models.ResponseModels;
 
 namespace EMS.Core.Business.Implements
 {
-    public class AccountInfoService : IAccountInfoService
+    public class AccountService : IAccountService
     {
         private readonly AppDbContext _context;
 
-        public AccountInfoService(AppDbContext context)
+        public AccountService(AppDbContext context)
         {
             _context = context;
         }
 
-        public async Task<GetPageAccountInfoResModel> GetPageAccountInfoAsync(long tenantId, GetPageAccountInfoReqModel input)
+        public async Task<BasePaginationResModel<AccountResModel>> GetPageAccountAsync(long tenantId, GetPageAccountReqModel input)
         {
             try
             {
@@ -23,7 +23,7 @@ namespace EMS.Core.Business.Implements
                 query = query.OrderBy(record => record.Username);
                 query = query.ApplyPaging(input.PageNo, input.PageSize, out var totalItems);
 
-                var data = query.Select(record => new AccountInfoResModel
+                var data = query.Select(record => new AccountResModel
                 {
                     Id = record.Id,
                     Username = record.Username,
@@ -32,7 +32,7 @@ namespace EMS.Core.Business.Implements
                     History = record.History,
                 }).ToList();
 
-                var result = new GetPageAccountInfoResModel
+                var result = new BasePaginationResModel<AccountResModel>
                 {
                     Data = data,
                     TotalItems = totalItems,
@@ -49,21 +49,16 @@ namespace EMS.Core.Business.Implements
             }
         }
 
-        public async Task<AccountInfoResModel> GetAccountInfoByIdAsync(long tenantId, long id)
+        public async Task<AccountResModel> GetAccountByIdAsync(long tenantId, long id)
         {
             try
             {
                 var account = _context.Accounts
                     .GetAvailableByTenantIdQueryable(tenantId)
-                    .Where(record => record.Id == id && !record.IsDeleted && record.IsActive)
+                    .Where(record => record.Id == id && record.IsActive)
                     .FirstOrDefault();
 
-                if(account == null)
-                {
-                    throw new ItemNotFoundException();
-                }
-
-                var data = new AccountInfoResModel
+                var data = new AccountResModel
                 {
                     Id = account.Id,
                     Username = account.Username,
@@ -94,13 +89,13 @@ namespace EMS.Core.Business.Implements
                     History = DateTime.Now,
                     EmployeeId = input.EmployeeId,
 
-                    AccountRoles = input.RoleIds.Select(item => new AccountRole
+                    AccountRoles = input.RoleIds.Select(itemId => new AccountRole
                     {
-                        RoleId = item,
+                        RoleId = itemId,
                     }).ToList(),
-                    AccountPermissions = input.PermissionIds.Select(item => new AccountPermission
+                    AccountPermissions = input.PermissionIds.Select(itemId => new AccountPermission
                     {
-                        PermissionId = item,
+                        PermissionId = itemId,
                     }).ToList()
                 };
 
@@ -114,12 +109,12 @@ namespace EMS.Core.Business.Implements
             }
         }
 
-        public async Task EditAccount(CreateOrEditAccountReqModel input)
+        public async Task EditAccount(long id, CreateOrEditAccountReqModel input)
         {
             try
             {
                 var account = _context.Accounts
-                    .Where(record => record.Id == input.Id && !record.IsDeleted)
+                    .Where(record => record.Id == id && !record.IsDeleted)
                     .FirstOrDefault();
 
                 if(account == null)
@@ -127,30 +122,22 @@ namespace EMS.Core.Business.Implements
                     throw new ItemNotFoundException();
                 }
 
-                account.Email = input.Email;
-                account.Username = input.Username;
-                account.Password = Utilities.HashPassword(input.Password);
-                account.Note = input.Note;  
-                account.History = DateTime.Now;
-                account.EmployeeId = input.EmployeeId;
-
-                var accountRoles = _context.AccountRoles.Where(record => record.AccountId == input.Id).AsEnumerable();
+                var accountRoles = _context.AccountRoles.Where(record => record.AccountId == id).AsEnumerable();
                 _context.AccountRoles.RemoveRange(accountRoles);
-                account.AccountRoles = input.RoleIds.Select(item => new AccountRole
+                account.AccountRoles = input.RoleIds.Select(itemId => new AccountRole
                 {
-                    RoleId = item
+                    RoleId = itemId
                 }).ToList();
 
-                var accountPermissions = _context.AccountPermissions.Where(record => record.AccountId == input.Id).AsEnumerable();
+                var accountPermissions = _context.AccountPermissions.Where(record => record.AccountId == id).AsEnumerable();
                 _context.AccountPermissions.RemoveRange(accountPermissions);
-                account.AccountPermissions = input.PermissionIds.Select(item => new AccountPermission
+                account.AccountPermissions = input.PermissionIds.Select(itemId => new AccountPermission
                 {
-                    PermissionId = item
+                    PermissionId = itemId
                 }).ToList();
 
                 _context.Accounts.Update(account);
                 await _context.SaveChangesAsync();
-
             }
             catch (Exception)
             {
@@ -164,10 +151,7 @@ namespace EMS.Core.Business.Implements
             try
             {
                 var existingAccount = _context.Accounts.GetAvailableById(id);
-                if(existingAccount == null)
-                {
-                    throw new ItemNotFoundException();
-                }
+
                 existingAccount.IsDeleted = true;
                 _context.Accounts.Update(existingAccount);
                 await _context.SaveChangesAsync();

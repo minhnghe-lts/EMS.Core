@@ -21,7 +21,7 @@ namespace EMS.Core.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<GetPagePositionResModel>> GetPagePosition([FromQuery] GetPagePositionReqModel input)
+        public async Task<ActionResult<BasePaginationResModel<PositionResModel>>> GetPagePosition([FromQuery] GetPagePositionReqModel input)
         {
             var result = await _positionService.GetPagePositonAsync(TenantId, input);
             return Ok(result);
@@ -35,16 +35,16 @@ namespace EMS.Core.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePosition(long tenentId, [FromBody] CreateOrEditPositionReqModel input)
+        public async Task<IActionResult> CreatePosition([FromBody] CreateOrEditPositionReqModel input)
         {
             await _positionService.CreatePosition(TenantId, input);
             return Ok();
         }
 
-        [HttpPut]
-        public async Task<IActionResult> EditPosition([FromBody] CreateOrEditPositionReqModel input)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditPosition(long id, [FromBody] CreateOrEditPositionReqModel input)
         {
-            await _positionService.EditPosition(input);
+            await _positionService.EditPosition(id, input);
             return Ok();
         }
 

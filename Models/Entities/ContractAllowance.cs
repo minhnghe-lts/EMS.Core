@@ -11,9 +11,5 @@ namespace EMS.Core.Models
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
         public bool IsActive { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public long CreatedBy { get; set; }
-        public DateTime? UpdatedAt { get; set; }
-        public long? UpdatedBy { get; set; }
     }
 }

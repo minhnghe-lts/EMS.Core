@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace EMS.Core.Models.ResponseModels
 {
-    public class GetPageContractResModel : BasePaginationResModel
-    {
-        public List<ContractResModel> Data { get; set; }
-    }
-
     public class ContractResModel
     {
         public string EmployeeName { get; set; }

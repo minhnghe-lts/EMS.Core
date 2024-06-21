@@ -19,7 +19,7 @@ namespace EMS.Core.Business.Implements
             _context = context;
         }
 
-        public async Task<GetPagePositionResModel> GetPagePositonAsync(long tenantId, GetPagePositionReqModel input)
+        public async Task<BasePaginationResModel<PositionResModel>> GetPagePositonAsync(long tenantId, GetPagePositionReqModel input)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace EMS.Core.Business.Implements
                     DepartmentName = record.Department.Name,
                 }).ToList();
 
-                var result = new GetPagePositionResModel
+                var result = new BasePaginationResModel<PositionResModel>
                 {
                     Data = data,
                     TotalItems = totalItems,
@@ -56,13 +56,8 @@ namespace EMS.Core.Business.Implements
             {
                 var position = _context.Positions
                     .GetAvailableByTenantIdQueryable(tenantId)
-                    .Where(record => record.Id == id && !record.IsDeleted)
+                    .Where(record => record.Id == id)
                     .FirstOrDefault();
-
-                if (position == null)
-                {
-                    throw new ItemNotFoundException();
-                }
 
                 var data = new PositionResModel
                 {
@@ -89,14 +84,14 @@ namespace EMS.Core.Business.Implements
                     DepartmentId = input.DepartmentId,
                     TenantId = tenantId,
 
-                    PositionRoles = input.PositionRoleIds.Select(item => new PositionRole
+                    PositionRoles = input.PositionRoleIds.Select(itemId => new PositionRole
                     {
-                        Id = item
+                        Id = itemId
                     }).ToList(),
 
-                    PositionPermissions = input.PositionPermissionIds.Select(item => new PositionPermission
+                    PositionPermissions = input.PositionPermissionIds.Select(itemId => new PositionPermission
                     {
-                        Id = item
+                        Id = itemId
                     }).ToList()
                 };
 
@@ -110,12 +105,12 @@ namespace EMS.Core.Business.Implements
             }
         }
 
-        public async Task EditPosition(CreateOrEditPositionReqModel input)
+        public async Task EditPosition(long id, CreateOrEditPositionReqModel input)
         {
             try
             {
                 var position = _context.Positions
-                    .Where(record => record.Id == input.Id && !record.IsDeleted)
+                    .Where(record => record.Id == id && !record.IsDeleted)
                     .FirstOrDefault();
 
                 if(position == null)
@@ -126,18 +121,18 @@ namespace EMS.Core.Business.Implements
                 position.Name = input.Name;
                 position.DepartmentId = input.DepartmentId;
                 
-                var positionRoles = _context.PositionRoles.Where(record => record.PositionId == input.Id).AsEnumerable();
+                var positionRoles = _context.PositionRoles.Where(record => record.PositionId == id).AsEnumerable();
                 _context.PositionRoles.RemoveRange(positionRoles);
-                position.PositionRoles = input.PositionRoleIds.Select(item => new PositionRole
+                position.PositionRoles = input.PositionRoleIds.Select(itemId => new PositionRole
                 {
-                    Id = item
+                    Id = itemId
                 }).ToList();
 
-                var positionPermissions = _context.PositionPermissions.Where(record => record.PositionId == input.Id).AsEnumerable();
+                var positionPermissions = _context.PositionPermissions.Where(record => record.PositionId == id).AsEnumerable();
                 _context.PositionPermissions.RemoveRange(positionPermissions);
-                position.PositionPermissions = input.PositionPermissionIds.Select(item => new PositionPermission
+                position.PositionPermissions = input.PositionPermissionIds.Select(itemId => new PositionPermission
                 {
-                    Id = item
+                    Id = itemId
                 }).ToList();
 
                 _context.Positions.Update(position);
@@ -156,10 +151,7 @@ namespace EMS.Core.Business.Implements
             try
             {
                 var existingPosition = _context.Positions.GetAvailableById(id);
-                if(existingPosition == null)
-                {
-                    throw new ItemNotFoundException();
-                }
+
                 existingPosition.IsDeleted = true;
                 _context.Positions.Update(existingPosition);
                 await _context.SaveChangesAsync();

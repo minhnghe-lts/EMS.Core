@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EMS.Core.Models.RequestModels
+namespace EMS.Core.Models.ResponseModels
 {
-    public class CreateOrEditDepartmentLevelReqModel
+    public class PositionResModel
     {
-        public int Level { get; set; }
+        public long Id { get; set; }
         public string Name { get; set; }
+        public string DepartmentName { get; set; }
     }
 }

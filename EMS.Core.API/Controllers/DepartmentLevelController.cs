@@ -22,7 +22,7 @@ namespace EMS.Core.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<GetPageDepartmentLevelResModel>> GetPageDepartmentLevel([FromQuery] GetPageDepartmentLevelReqModel input)
+        public async Task<ActionResult<BasePaginationResModel<DepartmentLevelResModel>>> GetPageDepartmentLevel([FromQuery] GetPageDepartmentLevelReqModel input)
         {
             var result = await _departmentLevelService.GetPageDepartmentLevel(TenantId, input);
             return Ok(result);
@@ -36,16 +36,16 @@ namespace EMS.Core.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateDepartmentLevel(long tenentId, [FromBody]CreateOrEditDepartmentLevelReqModel input)
+        public async Task<IActionResult> CreateDepartmentLevel([FromBody] CreateOrEditDepartmentLevelReqModel input)
         {
             await _departmentLevelService.CreateDepartmentLevel(TenantId, input);
             return Ok();
         }
 
-        [HttpPut]
-        public async Task<IActionResult> EditDepartmentLevel([FromBody] CreateOrEditDepartmentLevelReqModel input)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditDepartmentLevel(long id, [FromBody] CreateOrEditDepartmentLevelReqModel input)
         {
-            await _departmentLevelService.EditDepartmentLevel(input);
+            await _departmentLevelService.EditDepartmentLevel(id, input);
             return Ok();
         }
 

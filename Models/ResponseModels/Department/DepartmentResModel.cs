@@ -6,15 +6,11 @@ using System.Threading.Tasks;
 
 namespace EMS.Core.Models.ResponseModels
 {
-    public class GetPagePositionResModel : BasePaginationResModel
-    {
-        public List<PositionResModel> Data { get; set; }
-    }
-
-    public class PositionResModel
+    public class DepartmentResModel
     {
         public long Id { get; set; }
         public string Name { get; set; }
-        public string DepartmentName { get; set; }
+        public string ParentName { get; set; }
+        public string DepartmentLevelName { get; set; }
     }
 }

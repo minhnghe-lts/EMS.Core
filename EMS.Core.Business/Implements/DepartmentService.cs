@@ -20,7 +20,7 @@ namespace EMS.Core.Business.Implements
             _context = context;
         }
 
-        public async Task<GetPageDepartmentResModel> GetPageDepartmentAsync(long tenantId, GetPageDepartmentReqModel input)
+        public async Task<BasePaginationResModel<DepartmentResModel>> GetPageDepartmentAsync(long tenantId, GetPageDepartmentReqModel input)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace EMS.Core.Business.Implements
                     DepartmentLevelName = record.DepartmentLevel.Name,
                 }).ToList();
 
-                var result = new GetPageDepartmentResModel
+                var result = new BasePaginationResModel<DepartmentResModel>
                 {
                     Data = data,
                     TotalItems = totalItems,
@@ -58,13 +58,8 @@ namespace EMS.Core.Business.Implements
             {
                 var department = _context.Departments
                     .GetAvailableByTenantIdQueryable(tenantId)
-                    .Where(record => record.Id == id && !record.IsDeleted && record.IsActive)
+                    .Where(record => record.Id == id && record.IsActive)
                     .FirstOrDefault();
-
-                if(department == null)
-                {
-                    throw new ItemNotFoundException();
-                }
 
                 var data = new DepartmentResModel
                 {
@@ -114,12 +109,12 @@ namespace EMS.Core.Business.Implements
             }
         }
 
-        public async Task EditDepartment(CreateOrEditDepartmentReqModel input)
+        public async Task EditDepartment(long id, CreateOrEditDepartmentReqModel input)
         {
             try
             {
                 var department = _context.Departments
-                    .Where(record => record.Id == input.Id && !record.IsDeleted)
+                    .Where(record => record.Id == id && !record.IsDeleted)
                     .FirstOrDefault();
 
                 if(department == null)
@@ -131,19 +126,19 @@ namespace EMS.Core.Business.Implements
                 department.DepartmentLevelId = input.DepartmentLevelId;
                 department.ParentId = input.ParentId;
                 
-                var positions = _context.Positions.Where(record => record.DepartmentId == input.Id).AsEnumerable();
+                var positions = _context.Positions.Where(record => record.DepartmentId == id).AsEnumerable();
 
                 _context.Positions.RemoveRange(positions);
-                department.Positions = input.PositionIds.Select(item => new Position
+                department.Positions = input.PositionIds.Select(itemId => new Position
                 {
-                    Id = item
+                    Id = itemId
                 }).ToList();
 
-                var departmentManagers = _context.DepartmentManagers.Where(record => record.DepartmentId == input.Id).AsEnumerable();
+                var departmentManagers = _context.DepartmentManagers.Where(record => record.DepartmentId == id).AsEnumerable();
                 _context.DepartmentManagers.RemoveRange(departmentManagers);
-                department.DepartmentManagers = input.DepartmentManagerIds.Select(item => new DepartmentManager
+                department.DepartmentManagers = input.DepartmentManagerIds.Select(itemId => new DepartmentManager
                 {
-                    Id = item
+                    Id = itemId
                 }).ToList();
 
                 _context.Departments.Update(department);
@@ -161,10 +156,6 @@ namespace EMS.Core.Business.Implements
             try
             {
                 var existingDepartment = _context.Departments.GetAvailableById(id);
-                if(existingDepartment == null)
-                {
-                    throw new ItemNotFoundException();
-                }
 
                 existingDepartment.IsDeleted = true;
                 _context.Departments.Update(existingDepartment);

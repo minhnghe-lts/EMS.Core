@@ -19,7 +19,7 @@ namespace EMS.Core.Business.Implements
             _context = context;
         }
 
-        public async Task<GetPageDepartmentLevelResModel> GetPageDepartmentLevel(long tenantId, GetPageDepartmentLevelReqModel input)
+        public async Task<BasePaginationResModel<DepartmentLevelResModel>> GetPageDepartmentLevel(long tenantId, GetPageDepartmentLevelReqModel input)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace EMS.Core.Business.Implements
                     Level = record.Level,
                 }).ToList();
 
-                var result = new GetPageDepartmentLevelResModel
+                var result = new BasePaginationResModel<DepartmentLevelResModel>
                 {
                     Data = data,
                     TotalItems = totalItems,
@@ -56,13 +56,8 @@ namespace EMS.Core.Business.Implements
             {
                 var departmentLevel = _context.DepartmentLevels
                     .GetAvailableByTenantIdQueryable(tenantId)
-                    .Where(record => record.Id == id && !record.IsDeleted)
+                    .Where(record => record.Id == id)
                     .FirstOrDefault();
-
-                if(departmentLevel == null)
-                {
-                    throw new ItemNotFoundException();
-                }
 
                 var data = new DepartmentLevelResModel
                 {
@@ -101,12 +96,12 @@ namespace EMS.Core.Business.Implements
             }
         }
 
-        public async Task EditDepartmentLevel(CreateOrEditDepartmentLevelReqModel input)
+        public async Task EditDepartmentLevel(long id, CreateOrEditDepartmentLevelReqModel input)
         {
             try
             {
                 var departmentLevel = _context.DepartmentLevels
-                    .Where(record => record.Id == input.Id && !record.IsDeleted)
+                    .Where(record => record.Id == id && !record.IsDeleted)
                     .FirstOrDefault();
 
                 if(departmentLevel == null)
@@ -133,11 +128,6 @@ namespace EMS.Core.Business.Implements
             try
             {
                 var existingDepartmentLevel = _context.DepartmentLevels.GetAvailableById(id);
-
-                if(existingDepartmentLevel == null)
-                {
-                    throw new ItemNotFoundException();
-                }
 
                 existingDepartmentLevel.IsDeleted = true;
                 _context.DepartmentLevels.Update(existingDepartmentLevel);
