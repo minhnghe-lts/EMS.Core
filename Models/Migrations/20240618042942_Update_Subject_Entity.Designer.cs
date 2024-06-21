@@ -4,6 +4,7 @@ using EMS.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EMS.Core.Models.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240618042942_Update_Subject_Entity")]
+    partial class Update_Subject_Entity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -521,9 +524,6 @@ namespace EMS.Core.Models.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("CodeName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -1252,13 +1252,13 @@ namespace EMS.Core.Models.Migrations
             modelBuilder.Entity("EMS.Core.Models.Entities.CourseSubject", b =>
                 {
                     b.HasOne("EMS.Core.Models.Entities.Course", "Course")
-                        .WithMany("CourseSubjects")
+                        .WithMany()
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("EMS.Core.Models.Entities.Subject", "Subject")
-                        .WithMany("CourseSubjects")
+                        .WithMany()
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -1435,16 +1435,6 @@ namespace EMS.Core.Models.Migrations
             modelBuilder.Entity("EMS.Core.Models.Employee", b =>
                 {
                     b.Navigation("EmployeeSchedules");
-                });
-
-            modelBuilder.Entity("EMS.Core.Models.Entities.Course", b =>
-                {
-                    b.Navigation("CourseSubjects");
-                });
-
-            modelBuilder.Entity("EMS.Core.Models.Entities.Subject", b =>
-                {
-                    b.Navigation("CourseSubjects");
                 });
 
             modelBuilder.Entity("EMS.Core.Models.Permission", b =>
