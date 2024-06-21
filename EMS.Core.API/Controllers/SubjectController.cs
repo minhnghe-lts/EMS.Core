@@ -42,7 +42,7 @@ namespace EMS.Core.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> EditSubject(long id, [FromBody] CreateEditSubjectReqModel input)
         {
-            await _subjectService.EditSubjectAsync(TenantId, input);
+            await _subjectService.EditSubjectAsync(id, input);
             return Ok();
         }
 

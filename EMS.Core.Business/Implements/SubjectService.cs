@@ -95,6 +95,7 @@ namespace EMS.Core.Business.Implements
                 subject.CodeName = input.CodeName;
                 subject.Name = input.Name;
                 subject.TotalExercise = input.TotalExercise;
+                _context.Subjects.Update(subject);
                 await _context.SaveChangesAsync();
             }
             catch (Exception)
