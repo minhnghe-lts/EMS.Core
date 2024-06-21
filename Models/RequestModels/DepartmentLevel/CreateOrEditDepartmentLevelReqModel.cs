@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace EMS.Core.Models.RequestModels
 {
-    public class GetPageAccountInfoReqModel : BasePaginationReqModel
+    public class CreateOrEditDepartmentLevelReqModel
     {
-        //public string search {  get; set; }
+        public long Id { get; set; }
+        public int Level { get; set; }
+        public string Name { get; set; }
     }
 }

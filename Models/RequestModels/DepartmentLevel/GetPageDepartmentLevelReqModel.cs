@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace EMS.Core.Models.RequestModels
 {
-    public class GetPageAccountInfoReqModel : BasePaginationReqModel
+    public class GetPageDepartmentLevelReqModel : BasePaginationReqModel
     {
-        //public string search {  get; set; }
     }
 }

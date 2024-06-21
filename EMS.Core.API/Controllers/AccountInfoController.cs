@@ -3,7 +3,6 @@ using EMS.Core.Business.Interfaces;
 using EMS.Core.Commons;
 using EMS.Core.Models.RequestModels;
 using EMS.Core.Models.ResponseModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMS.Core.API.Controllers
@@ -24,6 +23,13 @@ namespace EMS.Core.API.Controllers
         public async Task<ActionResult<GetPageAccountInfoResModel>> GetPageAccountInfo([FromQuery] GetPageAccountInfoReqModel input)
         {
             var result = await _accountInfoService.GetPageAccountInfoAsync(TenantId, input);
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<AccountInfoResModel>> GetAccountInfoById(long id)
+        {
+            var result = await _accountInfoService.GetAccountInfoByIdAsync(TenantId, id);
             return Ok(result);
         }
     }
